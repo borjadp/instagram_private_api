@@ -72,6 +72,18 @@ class FriendshipTests(ApiTestBase):
                 'test': FriendshipTests('test_friendships_unblock_mock', api, user_id='2958144170')
             },
             {
+                'name': 'test_friendships_mute',
+                'test': FriendshipTests('test_friendships_mute', api, user_id='2958144170')
+            },
+            {
+                'name': 'test_friendships_mute_mock',
+                'test': FriendshipTests('test_friendships_mute_mock', api, user_id='2958144170')
+            },
+            {
+                'name': 'test_friendships_unmute_mock',
+                'test': FriendshipTests('test_friendships_unmute_mock', api, user_id='2958144170')
+            },
+            {
                 'name': 'test_blocked_reels',
                 'test': FriendshipTests('test_blocked_reels', api)
             },
@@ -212,6 +224,42 @@ class FriendshipTests(ApiTestBase):
         call_api.assert_called_with(
             'friendships/unblock/{user_id!s}/'.format(**{'user_id': user_id}),
             params=params)
+
+    @unittest.skip('Modifies data.')
+    def test_friendships_mute(self):
+        results = self.api.test_friendships_mute('2958144170', True, True)
+        self.assertEqual(results.get('status'), 'ok')
+        self.assertEqual(results.get('friendship_status', {}).get('muting'), True)
+        self.assertEqual(results.get('friendship_status', {}).get('is_muting_reel'), True)
+
+    @compat_mock.patch('instagram_private_api.Client._call_api')
+    def test_friendships_mute_mock(self, call_api):
+        call_api.return_value = {
+            'status': 'ok',
+            'friendship_status': {'following': True, 'muting': True, 'is_muting_reel': True}}
+        user_id = '2958144170'
+        params = {'user_id': user_id, 'radio_type': self.api.radio_type}
+        params.update(self.api.authenticated_params)
+        self.api.friendships_create(user_id)
+        call_api.assert_called_with('friendships/mute_posts_or_story_from_follow/', params=params)
+
+    @unittest.skip('Modifies data.')
+    def test_friendships_unmute(self):
+        results = self.api.test_friendships_mute('2958144170', True, True)
+        self.assertEqual(results.get('status'), 'ok')
+        self.assertEqual(results.get('friendship_status', {}).get('muting'), False)
+        self.assertEqual(results.get('friendship_status', {}).get('is_muting_reel'), False)
+
+    @compat_mock.patch('instagram_private_api.Client._call_api')
+    def test_friendships_unmute_mock(self, call_api):
+        call_api.return_value = {
+            'status': 'ok',
+            'friendship_status': {'following': True, 'muting': False, 'is_muting_reel': False}}
+        user_id = '2958144170'
+        params = {'user_id': user_id, 'radio_type': self.api.radio_type}
+        params.update(self.api.authenticated_params)
+        self.api.friendships_create(user_id)
+        call_api.assert_called_with('friendships/unmute_posts_or_story_from_follow/', params=params)
 
     def test_blocked_reels(self):
         results = self.api.blocked_reels()
