@@ -236,9 +236,7 @@ class FriendshipsEndpointsMixin(object):
         res = self._call_api(endpoint, params=params)
         return res
 
-    # TODO: New code!
-    def friendships_mute(self, user_id, mute_posts=False, mute_story=False):
-        # TODO: Review docs!
+    def friendships_mute(self, user_id, mute_posts=False, unmute_stories=False):
         """
         Mute a user's stories and/or posts
 
@@ -251,12 +249,17 @@ class FriendshipsEndpointsMixin(object):
                 {
                     "status": "ok",
                     "friendship_status": {
-                        "incoming_request": false,
-                        "followed_by": false,
-                        "outgoing_request": false,
                         "following": true,
+                        "followed_by": false,
                         "blocking": false,
+                        "muting": true,
                         "is_private": false
+                        "incoming_request": false,
+                        "outgoing_request": false,
+                        "is_blocking_reel": false,
+                        "is_muting_reel": true,
+                        "is_bestie": false,
+                        "is_restricted": false,
                     }
                 }
         """
@@ -264,14 +267,13 @@ class FriendshipsEndpointsMixin(object):
         params = {}
         if mute_posts:
             params['target_posts_author_id'] = user_id
-        if mute_story:
+        if unmute_stories:
             params['target_reel_author_id'] = user_id
         params.update(self.authenticated_params)
         res = self._call_api(endpoint, params=params)
         return res
 
-    def friendships_unmute(self, user_id, unmute_posts=False, unmute_story=False):
-        # TODO: Review docs!
+    def friendships_unmute(self, user_id, unmute_posts=False, unmute_stories=False):
         """
         Unmute a user's stories and/or posts
 
@@ -284,12 +286,17 @@ class FriendshipsEndpointsMixin(object):
                 {
                     "status": "ok",
                     "friendship_status": {
-                        "incoming_request": false,
-                        "followed_by": false,
-                        "outgoing_request": false,
                         "following": true,
+                        "followed_by": false,
                         "blocking": false,
+                        "muting": true,
                         "is_private": false
+                        "incoming_request": false,
+                        "outgoing_request": false,
+                        "is_blocking_reel": false,
+                        "is_muting_reel": true,
+                        "is_bestie": false,
+                        "is_restricted": false,
                     }
                 }
         """
@@ -297,12 +304,11 @@ class FriendshipsEndpointsMixin(object):
         params = {}
         if unmute_posts:
             params['target_posts_author_id'] = user_id
-        if unmute_story:
+        if unmute_stories:
             params['target_reel_author_id'] = user_id
         params.update(self.authenticated_params)
         res = self._call_api(endpoint, params=params)
         return res
-    # TODO: New code end!
 
     def block_friend_reel(self, user_id):
         """
