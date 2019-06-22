@@ -236,6 +236,74 @@ class FriendshipsEndpointsMixin(object):
         res = self._call_api(endpoint, params=params)
         return res
 
+    # TODO: New code!
+    def friendships_mute(self, user_id, mute_posts=False, mute_story=False):
+        # TODO: Review docs!
+        """
+        Mute a user's stories and/or posts
+
+        :param user_id: User id
+        :param mute_posts: Mute user posts
+        :param mute_story: Mute user stories
+        :return:
+            .. code-block:: javascript
+
+                {
+                    "status": "ok",
+                    "friendship_status": {
+                        "incoming_request": false,
+                        "followed_by": false,
+                        "outgoing_request": false,
+                        "following": true,
+                        "blocking": false,
+                        "is_private": false
+                    }
+                }
+        """
+        endpoint = 'friendships/mute_posts_or_story_from_follow/'
+        params = {}
+        if mute_posts:
+            params['target_posts_author_id'] = user_id
+        if mute_story:
+            params['target_reel_author_id'] = user_id
+        params.update(self.authenticated_params)
+        res = self._call_api(endpoint, params=params)
+        return res
+
+    def friendships_unmute(self, user_id, unmute_posts=False, unmute_story=False):
+        # TODO: Review docs!
+        """
+        Unmute a user's stories and/or posts
+
+        :param user_id: User id
+        :param mute_posts: Unmute user posts
+        :param mute_story: Unmute user stories
+        :return:
+            .. code-block:: javascript
+
+                {
+                    "status": "ok",
+                    "friendship_status": {
+                        "incoming_request": false,
+                        "followed_by": false,
+                        "outgoing_request": false,
+                        "following": true,
+                        "blocking": false,
+                        "is_private": false
+                    }
+                }
+        """
+        endpoint = 'friendships/unmute_posts_or_story_from_follow/'
+        params = {}
+        if unmute_posts:
+            params['target_posts_author_id'] = user_id
+        if unmute_story:
+            params['target_reel_author_id'] = user_id
+        params.update(self.authenticated_params)
+        res = self._call_api(endpoint, params=params)
+        return res
+    # TODO: New code end!
+
     def block_friend_reel(self, user_id):
         """
         Hide your stories from a specific user

@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.6.1
+- New endpoint functions for app client
+    * ``friendships_mute()``
+    * ``friendships_unmute()``
+
 ## 1.6.0
 - Web API:
     * Add ``highlight_reels()`` and ``highlight_reel_media()``
