@@ -227,7 +227,7 @@ class FriendshipTests(ApiTestBase):
 
     @unittest.skip('Modifies data.')
     def test_friendships_mute(self):
-        results = self.api.test_friendships_mute('2958144170', True, True)
+        results = self.api.friendships_mute('2958144170', True, True)
         self.assertEqual(results.get('status'), 'ok')
         self.assertEqual(results.get('friendship_status', {}).get('muting'), True)
         self.assertEqual(results.get('friendship_status', {}).get('is_muting_reel'), True)
@@ -238,14 +238,14 @@ class FriendshipTests(ApiTestBase):
             'status': 'ok',
             'friendship_status': {'following': True, 'muting': True, 'is_muting_reel': True}}
         user_id = '2958144170'
-        params = {'user_id': user_id, 'radio_type': self.api.radio_type}
+        params = {'target_posts_author_id': user_id, 'target_reel_author_id': user_id}
         params.update(self.api.authenticated_params)
-        self.api.friendships_create(user_id)
+        self.api.friendships_mute(user_id, True, True)
         call_api.assert_called_with('friendships/mute_posts_or_story_from_follow/', params=params)
 
     @unittest.skip('Modifies data.')
     def test_friendships_unmute(self):
-        results = self.api.test_friendships_mute('2958144170', True, True)
+        results = self.api.friendships_unmute('2958144170', True, True)
         self.assertEqual(results.get('status'), 'ok')
         self.assertEqual(results.get('friendship_status', {}).get('muting'), False)
         self.assertEqual(results.get('friendship_status', {}).get('is_muting_reel'), False)
@@ -256,9 +256,9 @@ class FriendshipTests(ApiTestBase):
             'status': 'ok',
             'friendship_status': {'following': True, 'muting': False, 'is_muting_reel': False}}
         user_id = '2958144170'
-        params = {'user_id': user_id, 'radio_type': self.api.radio_type}
+        params = {'target_posts_author_id': user_id, 'target_reel_author_id': user_id}
         params.update(self.api.authenticated_params)
-        self.api.friendships_create(user_id)
+        self.api.friendships_unmute(user_id, True, True)
         call_api.assert_called_with('friendships/unmute_posts_or_story_from_follow/', params=params)
 
     def test_blocked_reels(self):
